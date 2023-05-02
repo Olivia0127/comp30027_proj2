@@ -10,3 +10,5 @@ asmt2/report_template_word/COMP30027-report-template.pdf
 *.docx
 
 asmt2/.DS_Store
+
+predictions.csv
