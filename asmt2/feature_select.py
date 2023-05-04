@@ -22,9 +22,8 @@ def MI(train_df,train_features,test_features,m):
     selector.fit_transform(train_features, train_df["rating_label"])
     feature_idx = selector.get_support(indices=True)
     selected_features = train_features[:, feature_idx]
-    # selected_features_test = test_features[:, feature_idx]
-    return selected_features
-    # , selected_features_test
+    selected_features_test = test_features[:, feature_idx]
+    return selected_features, selected_features_test
 
 # chi Square selection
 def chi_square(train_df,train_features,test_features,m):

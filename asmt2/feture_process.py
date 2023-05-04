@@ -22,4 +22,20 @@ def process_OneHotEncoder_pd(train_df,test_df,column_name:str):
     one_hot_encoded_train_df = pd.get_dummies(train_df, columns=[column_name])
     one_hot_encoded_test_df = pd.get_dummies(test_df, columns=[column_name])
     return one_hot_encoded_train_df,one_hot_encoded_test_df
+def docclass_preprocess(train, test, threshold):
+    #change some type of class into other to decrease the dimension of matrix
+    data = train.value_counts()
+    data_test = test.value_counts()
+    unfreq_class = []
+    for cla in data.index:
+        if data[cla] < threshold:
+            unfreq_class.append(cla)
+    for cla in data_test.index:
+        if cla not in data.index:
+            test = test.replace(cla, 'others')
+    train = train.replace(unfreq_class, 'others')
+    train.fillna('others', inplace = True)
+    test = test.replace(unfreq_class, 'others')
+    test.fillna('others', inplace = True)
+    return train, test
 
