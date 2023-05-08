@@ -1,6 +1,6 @@
 # import librart
 import sklearn
-import numpy
+import numpy as np
 import pandas as pd
 import pickle
 from scipy.sparse import hstack
@@ -32,4 +32,24 @@ def chi_square(train_df,train_features,test_features,m):
     feature_idx = selector.get_support(indices=True)
     selected_features = train_features[:, feature_idx]
     selected_features_test = test_features[:, feature_idx]
+    return selected_features, selected_features_test
+
+# Cumulative Explained Variance Ratio
+def variance_ratio(train_df,train_features,test_features,threshold):
+    chi2_scores, _ = chi2(train_features, train_df["rating_label"])
+
+    sorted_indices = np.argsort(chi2_scores)[::-1]
+    sorted_scores = chi2_scores[sorted_indices]
+    cumulative_scores = np.cumsum(sorted_scores)
+
+    total_score = np.sum(sorted_scores)
+    cumulative_ratio = cumulative_scores / total_score
+
+    threshold_ratio = threshold
+
+    selected_index = np.argmax(cumulative_ratio >= threshold_ratio)
+
+    selected_feature_indices = sorted_indices[:selected_index]
+    selected_features = train_features[:, selected_feature_indices]
+    selected_features_test = test_features[:, selected_feature_indices]
     return selected_features, selected_features_test
